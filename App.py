@@ -3,14 +3,26 @@ import random
 import glob
 import csv
 import os
+import subprocess
 from pydub import AudioSegment
 from latinSquareGenerator import LatinSquare
 
 latinSquare = []
-audioList = ["Videos/A.mp4", "Videos/B.mp4", "Videos/C.mp4", \
-    "Videos/D.mp4", "Videos/E.mp4", "Videos/F.mp4", "Videos/G.mp4", \
-    "Videos/H.mp4", "Videos/I.mp4"]
 
+audioList = ["Videos/AudioInput/A.wav", "Videos/AudioInput/B.wav", "Videos/AudioInput/C.wav", \
+    "Videos/AudioInput/D.wav", "Videos/AudioInput/E.wav", "Videos/AudioInput/F.wav",\
+    "Videos/AudioInput/G.wav", "Videos/AudioInput/H.wav", "Videos/AudioInput/I.wav", \
+    "Videos/AudioInput/J.wav", "Videos/AudioInput/K.wav", "Videos/AudioInput/L.wav"\
+    , "Videos/AudioInput/M.wav", "Videos/AudioInput/N.wav", "Videos/AudioInput/O.wav"]
+
+fillerList = ["Videos/AudioInput/aa.wav", "Videos/AudioInput/bb.wav", "Videos/AudioInput/cc.wav", \
+    "Videos/AudioInput/dd.wav", "Videos/AudioInput/ee.wav", "Videos/AudioInput/ff.wav", \
+    "Videos/AudioInput/gg.wav", "Videos/AudioInput/hh.wav", "Videos/AudioInput/ii.wav", \
+    "Videos/AudioInput/jj.wav", "Videos/AudioInput/kk.wav", "Videos/AudioInput/ll.wav" \
+    , "Videos/AudioInput/mm.wav", "Videos/AudioInput/nn.wav", "Videos/AudioInput/oo.wav", \
+    "Videos/AudioInput/pp.wav"]
+
+order = list(range(16))
 
 """ Writes generated Latin square to CSV file """
 
@@ -27,16 +39,20 @@ def combineAudiofiles(audioList, order, name):
     combined = AudioSegment.empty()
     for i in range(len(audioList)):
         j = order[i]
-        item = AudioSegment.from_file(audioList[j], format="mp4")
+        filler = AudioSegment.from_file(fillerList[i], format="wav")
+        item = AudioSegment.from_file(audioList[j], format="wav")
+        combined += filler
         combined += item
+    filler = AudioSegment.from_file(fillerList[15], format="wav")
+    combined += filler
     with open("Videos/" + name, 'wb') as out_f:
-        combined.export(out_f, format="mp3")
+        combined.export(out_f, format="wav")
 
 
 """ Generates Latin square of specified size """
 
 def createLatinSquare():
-    ls = LatinSquare.generate_latin_square(9)
+    ls = LatinSquare.generate_latin_square(15)
     return(ls.square)
 
 
